@@ -54,8 +54,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         MaterialPageRoute(builder: (context) => const LoginPage()),
       );
     } else {
-      print('RESPOSTA...');
-      print(response.body);
       setState(() {
         _message = 'Erro ao enviar o e-mail. Verifique o endereço informado.';
       });
