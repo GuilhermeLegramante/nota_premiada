@@ -1,15 +1,27 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
-    namespace = "com.example.nota_premiada"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    namespace = "com.example.nota_premiada" // Defina seu namespace aqui
+    compileSdk = 35 // Defina seu SDK de compilação mais recente
 
+    defaultConfig {
+        applicationId = "com.example.nota_premiada" // Seu ID de aplicação único
+        minSdk = 21 // Defina o SDK mínimo de acordo com a necessidade do seu app
+        targetSdk = 35 // O SDK de destino que você está usando
+        versionCode = 1 // Versão do código (geralmente é incrementado a cada nova versão)
+        versionName = "1.0.0" // Versão da aplicação (mude conforme necessário)
+    }
+
+    buildTypes {
+        release {
+            // Caso você não tenha uma chave de assinatura própria, use o 'debug' ou configure uma chave
+            signingConfig = signingConfigs.getByName("debug") 
+        }
+    }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -17,29 +29,22 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
-    }
-
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.nota_premiada"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
-    }
-
-    buildTypes {
-        release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
-        }
+        jvmTarget = "11"
     }
 }
 
 flutter {
-    source = "../.."
+    source = "../.." // Caminho para o diretório Flutter
+}
+
+dependencies {
+    implementation("androidx.appcompat:appcompat:1.3.1")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.0")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:1.5.21")
+    implementation("com.android.tools:desugar_jdk_libs:1.1.5")
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
