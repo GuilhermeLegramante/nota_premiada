@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_multi_formatter/flutter_multi_formatter.dart';
 import 'package:nota_premiada/services/cpf_input_formatter.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 import 'package:nota_premiada/config/api_config.dart';
 
@@ -104,13 +103,9 @@ class _RegisterPageState extends State<RegisterPage> {
     }
 
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final token = prefs.getString('access_token');
-
       final response = await http.post(
         Uri.parse('${ApiConfig.baseUrl}/register'),
         headers: {
-          'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         },

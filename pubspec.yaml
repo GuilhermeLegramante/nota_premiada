@@ -37,6 +37,14 @@ dependencies:
   webview_flutter: ^4.2.2
   simple_barcode_scanner: ^0.3.0
   flutter_multi_formatter: ^2.12.3
+  flutter_launcher_icons: ^0.13.1
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/favicon-cacequi.png"
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -59,6 +67,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/favicon-cacequi.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

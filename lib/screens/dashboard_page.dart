@@ -143,7 +143,7 @@ class _DashboardPageState extends State<DashboardPage> {
             const DrawerHeader(
               decoration: BoxDecoration(color: Colors.indigo),
               child: Text(
-                'Nota Premiada',
+                'Nota Premiada Cacequi',
                 style: TextStyle(color: Colors.white, fontSize: 24),
               ),
             ),
@@ -279,7 +279,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                               numeros
                                                   .map<Widget>(
                                                     (n) => Chip(
-                                                      label: Text(n['numero']),
+                                                      label: Text(
+                                                        n['id'].toString(),
+                                                      ),
                                                     ),
                                                   )
                                                   .toList(),
@@ -330,6 +332,15 @@ class _DashboardPageState extends State<DashboardPage> {
         },
         icon: const Icon(Icons.qr_code_scanner),
         label: const Text('Ler Nota'),
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.grey[200],
+        padding: const EdgeInsets.all(12),
+        child: Text(
+          '© ${DateTime.now().year} Nota Premiada - Prefeitura de Cacequi/RS',
+          textAlign: TextAlign.center,
+          style: const TextStyle(fontSize: 14, color: Colors.black54),
+        ),
       ),
     );
   }

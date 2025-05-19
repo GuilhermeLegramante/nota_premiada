@@ -16,50 +16,93 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+
+  final emailFocusNode = FocusNode();
+  final passwordFocusNode = FocusNode();
+
   bool loading = false;
   String? error;
+  String? emailError;
+  String? passwordError;
 
   Future<void> login() async {
+    final email = emailController.text.trim();
+    final password = passwordController.text;
+
     setState(() {
-      loading = true;
+      emailError = null;
+      passwordError = null;
       error = null;
     });
 
-    final response = await http.post(
-      Uri.parse('${ApiConfig.baseUrl}/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode({
-        'email': emailController.text,
-        'password': passwordController.text,
-      }),
-    );
+    bool hasError = false;
 
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final token = data['access_token'];
-      final userId = data['user']['id'];
+    if (email.isEmpty) {
+      emailError = 'Informe seu e-mail';
+      hasError = true;
+      emailFocusNode.requestFocus();
+    } else if (password.isEmpty) {
+      passwordError = 'Informe sua senha';
+      hasError = true;
+      passwordFocusNode.requestFocus();
+    }
 
-      if (token != null && token is String && userId != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('access_token', token);
-        await prefs.setInt('user_id', userId);
-
-        Navigator.pushReplacementNamed(context, '/dashboard');
-      } else {
-        setState(() {
-          error = 'Token ou ID de usuário ausente ou inválido';
-        });
-      }
-    } else {
-      final data = json.decode(response.body);
-      setState(() {
-        error = data['message'] ?? 'Login inválido';
-      });
+    if (hasError) {
+      setState(() {});
+      return;
     }
 
     setState(() {
-      loading = false;
+      loading = true;
     });
+
+    try {
+      final response = await http.post(
+        Uri.parse('${ApiConfig.baseUrl}/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'email': email, 'password': password}),
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final token = data['access_token'];
+        final userId = data['user']['id'];
+
+        if (token != null && token is String && userId != null) {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('access_token', token);
+          await prefs.setInt('user_id', userId);
+
+          Navigator.pushReplacementNamed(context, '/dashboard');
+        } else {
+          setState(() {
+            error = 'Token ou ID de usuário ausente ou inválido';
+          });
+        }
+      } else {
+        final data = json.decode(response.body);
+        setState(() {
+          error = data['message'] ?? 'Login inválido';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        error = 'Erro de conexão. Tente novamente.';
+      });
+    } finally {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -83,20 +126,29 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               const SizedBox(height: 32),
+
               TextField(
                 controller: emailController,
+                focusNode: emailFocusNode,
                 decoration: InputDecoration(
                   labelText: 'E-mail',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                   prefixIcon: const Icon(Icons.email),
+                  errorText: emailError,
                 ),
                 keyboardType: TextInputType.emailAddress,
+                textInputAction: TextInputAction.next,
+                onSubmitted: (_) {
+                  FocusScope.of(context).requestFocus(passwordFocusNode);
+                },
               ),
               const SizedBox(height: 16),
+
               TextField(
                 controller: passwordController,
+                focusNode: passwordFocusNode,
                 obscureText: true,
                 decoration: InputDecoration(
                   labelText: 'Senha',
@@ -104,12 +156,18 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   prefixIcon: const Icon(Icons.lock),
+                  errorText: passwordError,
                 ),
+                textInputAction: TextInputAction.done,
+                onSubmitted: (_) => login(),
               ),
               const SizedBox(height: 20),
+
               if (error != null)
                 Text(error!, style: const TextStyle(color: Colors.red)),
+
               const SizedBox(height: 10),
+
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -136,7 +194,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
 
-              // Links adicionais
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

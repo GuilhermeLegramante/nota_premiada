@@ -17,11 +17,13 @@ android {
     }
 
     buildTypes {
-        release {
-            // Caso você não tenha uma chave de assinatura própria, use o 'debug' ou configure uma chave
-            signingConfig = signingConfigs.getByName("debug") 
+        getByName("release") {
+            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
