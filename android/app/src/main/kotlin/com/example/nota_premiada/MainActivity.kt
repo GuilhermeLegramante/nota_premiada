@@ -1,4 +1,4 @@
-package com.example.nota_premiada
+package com.hardsoft.notapremiada
 
 import io.flutter.embedding.android.FlutterActivity
 

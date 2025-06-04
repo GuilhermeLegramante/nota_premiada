@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.nota_premiada" // Defina seu namespace aqui
+    namespace = "com.hardsoft.notapremiada" // Defina seu namespace aqui
     compileSdk = 35 // Defina seu SDK de compilação mais recente
-
+    compileSdk = 35
     defaultConfig {
-        applicationId = "com.example.nota_premiada" // Seu ID de aplicação único
+        applicationId = "com.hardsoft.notapremiada" // Seu ID de aplicação único
         minSdk = 21 // Defina o SDK mínimo de acordo com a necessidade do seu app
         targetSdk = 35 // O SDK de destino que você está usando
         versionCode = 1 // Versão do código (geralmente é incrementado a cada nova versão)
