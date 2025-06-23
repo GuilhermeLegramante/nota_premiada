@@ -7,14 +7,20 @@ workflows:
       vars:
         APP_ID: com.hardsoft.notaPremiada
       groups:
-        - app_store_credentials  # grupo com as variáveis da API Key da Apple
+        - app_store_credentials
     scripts:
       - name: Clean project
         script: flutter clean
       - name: Get dependencies
         script: flutter pub get
-      - name: Build IPA
+      - name: Build .app
         script: flutter build ios --release --no-codesign
+      - name: Create .ipa manually
+        script: |
+          mkdir -p build/ios/ipa/Payload
+          cp -r build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
+          cd build/ios/ipa
+          zip -r Runner.ipa Payload
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
