@@ -5,7 +5,7 @@ workflows:
       flutter: stable
       xcode: latest
       vars:
-        APP_ID: com.hardsoft.notaPremiada
+        APP_ID: com.hardsoft.notapremiada
       groups:
         - app_store_credentials  # grupo com as variáveis da API Key da Apple
     scripts:
