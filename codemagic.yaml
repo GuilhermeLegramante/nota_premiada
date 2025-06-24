@@ -26,6 +26,6 @@ workflows:
     publishing:
       app_store_connect:
         api_key: "@env:APP_STORE_CONNECT_PUBLISHER_PRIVATE_KEY"
-        key_id: "@env:APP_STORE_CONNECT_KEY_IDENTIFIER"
-        issuer_id: "@env:APP_STORE_CONNECT_ISSUER_ID"
+        key_id: "KX74AF689U"
+        issuer_id: "5d27ba94-ad90-403e-8774-60caae8f435b"
         submit_to_app_store: true
