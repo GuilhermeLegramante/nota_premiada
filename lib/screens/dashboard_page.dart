@@ -88,8 +88,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   Future<void> _launchSefazUrl(String chave) async {
-    final url =
-        'https://dfe-portal.svrs.rs.gov.br/Dfe/QrCodeNFce?p=$chave|2|1|1|';
+    final url = 'https://dfe-portal.svrs.rs.gov.br/Dfe/QrCodeNFce?p=$chave';
 
     Navigator.push(
       context,
