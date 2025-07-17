@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.6
+  package_info_plus: ^4.0.2
   shared_preferences: ^2.2.2
   intl: ^0.18.1
   url_launcher: ^6.2.5
@@ -69,6 +70,12 @@ dev_dependencies:
 flutter:
   assets:
     - assets/favicon-cacequi.png
+    - assets/logo_nota_premiada.png
+    - assets/logo_prefeitura.png
+    - assets/slogan_branco.png
+    - assets/construindo.png
+    - assets/gestao.png
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

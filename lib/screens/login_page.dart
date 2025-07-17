@@ -115,16 +115,17 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.receipt_long, size: 80, color: Colors.indigo),
+              // const Icon(Icons.receipt_long, size: 80, color: Colors.indigo),
+              Image.asset('assets/logo_nota_premiada.png', height: 100),
               const SizedBox(height: 16),
-              const Text(
-                'Nota Premiada',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.indigo,
-                ),
-              ),
+              // const Text(
+              //   'Nota Premiada',
+              //   style: TextStyle(
+              //     fontSize: 28,
+              //     fontWeight: FontWeight.bold,
+              //     color: Colors.indigo,
+              //   ),
+              // ),
               const SizedBox(height: 32),
 
               TextField(

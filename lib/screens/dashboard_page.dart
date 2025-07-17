@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:nota_premiada/config/api_config.dart';
+import 'package:nota_premiada/utils/atualizacao_util.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -28,6 +29,10 @@ class _DashboardPageState extends State<DashboardPage> {
   void initState() {
     super.initState();
     fetchDashboardData();
+
+    Future.delayed(Duration.zero, () {
+      AtualizacaoUtil.verificarAtualizacao(context);
+    });
   }
 
   Future<void> fetchDashboardData() async {
@@ -58,6 +63,8 @@ class _DashboardPageState extends State<DashboardPage> {
             final numeros = cupom['numeros_sorteio'] ?? [];
             return sum + numeros.length;
           });
+          print('NUMEROS');
+          print(totalNumerosSorteio);
         });
       }
 
@@ -136,29 +143,51 @@ class _DashboardPageState extends State<DashboardPage> {
     return Scaffold(
       appBar: AppBar(title: const Text('Dashboard')),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Colors.indigo),
-              child: Text(
-                'Nota Premiada Cacequi',
-                style: TextStyle(color: Colors.white, fontSize: 24),
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Colors.indigo),
+              child: Center(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset('assets/logo_prefeitura.png', height: 150),
+                    const SizedBox(width: 12),
+                    Image.asset('assets/logo_nota_premiada.png', height: 60),
+                  ],
+                ),
               ),
             ),
-            ListTile(
-              leading: Icon(Icons.dashboard),
-              title: Text('Dashboard'),
-              onTap: () => Navigator.pop(context),
+
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  ListTile(
+                    leading: Icon(Icons.dashboard),
+                    title: Text('Dashboard'),
+                    onTap: () => Navigator.pop(context),
+                  ),
+                  ListTile(
+                    leading: Icon(Icons.logout),
+                    title: Text('Sair'),
+                    onTap: () async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.remove('access_token');
+                      Navigator.pushReplacementNamed(context, '/login');
+                    },
+                  ),
+                ],
+              ),
             ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Sair'),
-              onTap: () async {
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.remove('access_token');
-                Navigator.pushReplacementNamed(context, '/login');
-              },
+            Padding(
+              padding: const EdgeInsets.all(2),
+              child: Column(
+                children: [
+                  // Image.asset('assets/gestao.png', height: 250),
+                  Image.asset('assets/construindo.png', height: 100),
+                ],
+              ),
             ),
           ],
         ),
@@ -279,7 +308,9 @@ class _DashboardPageState extends State<DashboardPage> {
                                                   .map<Widget>(
                                                     (n) => Chip(
                                                       label: Text(
-                                                        n['id'].toString(),
+                                                        n['id']
+                                                            .toString()
+                                                            .padLeft(6, '0'),
                                                       ),
                                                     ),
                                                   )
