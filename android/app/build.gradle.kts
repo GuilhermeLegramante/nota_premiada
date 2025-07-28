@@ -5,25 +5,33 @@ plugins {
 }
 
 android {
-    namespace = "com.hardsoft.notaPremiada" // Defina seu namespace aqui
-    compileSdk = 35 // Defina seu SDK de compilação mais recente
+    namespace = "com.hardsoft.notaPremiada"
     compileSdk = 35
+
     defaultConfig {
-        applicationId = "com.hardsoft.notaPremiada" // Seu ID de aplicação único
-        minSdk = 21 // Defina o SDK mínimo de acordo com a necessidade do seu app
-        targetSdk = 35 // O SDK de destino que você está usando
-        versionCode = 1 // Versão do código (geralmente é incrementado a cada nova versão)
-        versionName = "1.0.0" // Versão da aplicação (mude conforme necessário)
+        applicationId = "com.hardsoft.notaPremiada"
+        minSdk = 21
+        targetSdk = 35
+        versionCode = 2
+        versionName = "1.0.1"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("C:/Users/Public/nota_premiada_key.jks")
+            storePassword = "#Gibson1959"
+            keyAlias = "meu_alias"
+            keyPassword = "#Gibson1959"
+        }
     }
 
     buildTypes {
         getByName("release") {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             isShrinkResources = false
         }
     }
-
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -36,7 +44,7 @@ android {
 }
 
 flutter {
-    source = "../.." // Caminho para o diretório Flutter
+    source = "../.."
 }
 
 dependencies {

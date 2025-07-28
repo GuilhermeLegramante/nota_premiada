@@ -3,7 +3,8 @@ import 'package:nota_premiada/screens/forgot_password_page.dart';
 import 'package:nota_premiada/screens/home_page.dart';
 import 'package:nota_premiada/screens/login_page.dart';
 import 'package:nota_premiada/screens/dashboard_page.dart';
-import 'package:nota_premiada/screens/register_page.dart'; // Importando DashboardPage
+import 'package:nota_premiada/screens/register_page.dart';
+import 'package:nota_premiada/screens/manual_cadastro_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
         '/dashboard':
             (context) =>
                 const DashboardPage(), // Definindo a rota para o Dashboard
+        '/cadastro-manual': (context) => const ManualCadastroPage(),
       },
     );
   }

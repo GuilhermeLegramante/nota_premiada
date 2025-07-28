@@ -339,29 +339,30 @@ class _DashboardPageState extends State<DashboardPage> {
                   ),
                 ),
               ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          // Navegar para o scanner de QR Code
-          String? qrCode = await SimpleBarcodeScanner.scanBarcode(
-            context,
-            barcodeAppBar: const BarcodeAppBar(
-              appBarTitle: 'Scanner QR Code',
-              centerTitle: false,
-              enableBackButton: true,
-              backButtonIcon: Icon(Icons.arrow_back_ios),
-            ),
-            isShowFlashIcon: true,
-            delayMillis: 2000,
-            cameraFace: CameraFace.back,
-          );
-
-          if (qrCode != null && qrCode.isNotEmpty) {
-            // Após o QR Code ser escaneado, cadastrar o cupom
-            cadastrarCupom(qrCode);
-          }
-        },
-        icon: const Icon(Icons.qr_code_scanner),
-        label: const Text('Ler Nota'),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.extended(
+            heroTag: 'manual',
+            icon: Icon(Icons.edit_note),
+            label: Text('Cadastrar Manual'),
+            onPressed: () {
+              Navigator.pushNamed(context, '/cadastro-manual');
+            },
+          ),
+          SizedBox(height: 12),
+          FloatingActionButton.extended(
+            heroTag: 'scanner',
+            icon: Icon(Icons.qr_code_scanner),
+            label: Text('Ler QR CODE'),
+            onPressed: () async {
+              String? qrCode = await SimpleBarcodeScanner.scanBarcode(context);
+              if (qrCode != null && qrCode.isNotEmpty) {
+                cadastrarCupom(qrCode);
+              }
+            },
+          ),
+        ],
       ),
       bottomNavigationBar: Container(
         color: Colors.grey[200],
