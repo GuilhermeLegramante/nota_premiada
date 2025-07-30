@@ -1,18 +1,18 @@
 workflows:
   ios-release:
-    name: Build iOS e enviar App Store
+    name: Build iOS e enviar TestFlight
     max_build_duration: 60
+    integrations:
+      app_store_connect: full_key  # nome da sua integração no Codemagic
     environment:
       flutter: stable
       xcode: latest
     scripts:
       - flutter pub get
-      - flutter build ipa --no-codesign
+      - flutter build ipa
     artifacts:
       - build/ios/ipa/*.ipa
     publishing:
       app_store_connect:
-        api_key: full_key
-        bundle_id: com.hardsoft.notaPremiada
-        submit_to_testflight: true    # opcional, pode manter para beta testers
-        submit_to_app_store: true     # envia para revisão e publicação na loja
+        auth: integration
+        submit_to_testflight: true
