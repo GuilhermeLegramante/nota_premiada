@@ -63,8 +63,6 @@ class _DashboardPageState extends State<DashboardPage> {
             final numeros = cupom['numeros_sorteio'] ?? [];
             return sum + numeros.length;
           });
-          print('NUMEROS');
-          print(totalNumerosSorteio);
         });
       }
 
@@ -308,7 +306,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                                   .map<Widget>(
                                                     (n) => Chip(
                                                       label: Text(
-                                                        n['id']
+                                                        n['codigo_continuo']
                                                             .toString()
                                                             .padLeft(6, '0'),
                                                       ),

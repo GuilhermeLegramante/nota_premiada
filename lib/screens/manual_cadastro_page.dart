@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+
 import '../config/api_config.dart';
 
 class ManualCadastroPage extends StatefulWidget {
@@ -20,6 +24,18 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
   bool loading = false;
   String? error;
   Map<String, String> fieldErrors = {};
+
+  File? _imagemNota;
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _tirarFoto() async {
+    final XFile? arquivo = await _picker.pickImage(source: ImageSource.camera);
+    if (arquivo != null) {
+      setState(() {
+        _imagemNota = File(arquivo.path);
+      });
+    }
+  }
 
   Future<void> cadastrarManual() async {
     setState(() {
@@ -53,24 +69,35 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
       return;
     }
 
+    if (_imagemNota == null) {
+      setState(() {
+        fieldErrors['arquivo'] = 'Por favor, tire uma foto da nota.';
+        loading = false;
+      });
+      return;
+    }
+
     try {
       final prefs = await SharedPreferences.getInstance();
       final token = prefs.getString('access_token');
 
-      final response = await http.post(
-        Uri.parse('${ApiConfig.baseUrl}/cupons/manual'),
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'chave_acesso': _chaveController.text.trim(),
-          'valor_total': valor,
-          'fornecedor': _fornecedorController.text.trim(),
-          'observacao': _obsController.text.trim(),
-        }),
-      );
+      final uri = Uri.parse('${ApiConfig.baseUrl}/cupons/manual');
+      final request =
+          http.MultipartRequest('POST', uri)
+            ..headers['Authorization'] = 'Bearer $token'
+            ..fields['chave_acesso'] = _chaveController.text.trim()
+            ..fields['valor_total'] = valor.toString()
+            ..fields['fornecedor'] = _fornecedorController.text.trim()
+            ..fields['observacao'] = _obsController.text.trim();
 
+      if (_imagemNota != null) {
+        request.files.add(
+          await http.MultipartFile.fromPath('arquivo', _imagemNota!.path),
+        );
+      }
+
+      final streamedResponse = await request.send();
+      final response = await http.Response.fromStream(streamedResponse);
       final data = jsonDecode(response.body);
 
       if (response.statusCode == 201) {
@@ -109,6 +136,29 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
       ),
+    );
+  }
+
+  Widget _widgetFoto() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Foto da Nota (obrigatório)',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 8),
+        if (_imagemNota != null)
+          ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.file(_imagemNota!, height: 150, fit: BoxFit.cover),
+          ),
+        TextButton.icon(
+          onPressed: _tirarFoto,
+          icon: const Icon(Icons.camera_alt),
+          label: const Text('Tirar foto da nota'),
+        ),
+      ],
     );
   }
 
@@ -152,7 +202,9 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
             const SizedBox(height: 16),
             TextField(
               controller: _valorController,
-              keyboardType: TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               decoration: inputDecoration(
                 'Valor Total',
                 Icons.attach_money,
@@ -176,6 +228,8 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
                 Icons.notes,
               ),
             ),
+            const SizedBox(height: 16),
+            _widgetFoto(),
             const SizedBox(height: 24),
             if (error != null)
               Text(
