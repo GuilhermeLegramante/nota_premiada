@@ -4,14 +4,15 @@
 <dict>
   <key>method</key>
   <string>app-store</string>
-  <key>teamID</key>
-  <string>7Y7V9Q26TT</string> <!-- seu Team ID -->
   <key>signingStyle</key>
-  <string>manual</string>
-  <key>provisioningProfiles</key>
-  <dict>
-    <key>com.hardsoft.notaPremiada</key>
-    <string>7Y7V9Q26TT.com.hardsoft.notaPremiada</string> <!-- nome do seu provisioning profile -->
-  </dict>
+  <string>automatic</string>
+  <key>uploadBitcode</key>
+  <false/>
+  <key>compileBitcode</key>
+  <false/>
+  <key>stripSwiftSymbols</key>
+  <true/>
+  <key>destination</key>
+  <string>export</string>
 </dict>
 </plist>
