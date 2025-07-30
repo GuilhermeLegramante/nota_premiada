@@ -19,5 +19,9 @@ workflows:
 
     publishing:
       app_store_connect:
-        credentials: CodeMagic API Key
+        api_key:
+          key_id: $APP_STORE_API_KEY_ID
+          issuer_id: $APP_STORE_ISSUER_ID
+          private_key: |
+            $APP_STORE_PRIVATE_KEY
         submit_to_testflight: true
