@@ -3,7 +3,7 @@ workflows:
     name: Build iOS e enviar TestFlight
     max_build_duration: 60
     integrations:
-      app_store_connect: manager_key  # nome da sua integração no Codemagic
+      app_store_connect: full_key  # nome da sua integração no Codemagic
     environment:
       flutter: stable
       xcode: latest
