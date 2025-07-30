@@ -1,22 +1,15 @@
 workflows:
   ios-release:
-    name: iOS Release Build - Nota Premiada
+    name: Build iOS e enviar TestFlight
     max_build_duration: 60
     environment:
       flutter: stable
       xcode: latest
-      vars:
-        APP_ID: com.hardsoft.notaPremiada
     scripts:
-      - name: Get Flutter dependencies
-        script: flutter pub get
-
-      - name: Build iOS .ipa
-        script: flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
-
+      - flutter pub get
+      - flutter build ipa --release --export-options-plist=ios/ExportOptions.plist
     artifacts:
       - build/ios/ipa/*.ipa
-
     publishing:
       app_store_connect:
         api_key:
