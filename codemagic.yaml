@@ -2,7 +2,7 @@ workflows:
   ios-release:
     name: Build iOS e enviar TestFlight
     integrations:
-      app_store_connect: manager_key
+      app_store_connect: manager_key  # Nome da sua API key cadastrada no Codemagic
     environment:
       flutter: stable
       xcode: latest
