@@ -42,9 +42,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       _isLoading = false;
     });
 
-    print('STATUS RECUPERACAO SENHA');
-    print(response.statusCode);
-
     if (response.statusCode == 200) {
       setState(() {
         _message = 'Um link de redefinição foi enviado para seu e-mail.';
