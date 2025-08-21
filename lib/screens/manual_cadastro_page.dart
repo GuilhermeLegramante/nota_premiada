@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter/services.dart';
 
 import '../config/api_config.dart';
 
@@ -21,12 +23,23 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
   final _fornecedorController = TextEditingController();
   final _obsController = TextEditingController();
 
+  final NumberFormat _currencyFormatter = NumberFormat.currency(
+    locale: 'pt_BR',
+    symbol: 'R\$',
+  );
+
   bool loading = false;
   String? error;
   Map<String, String> fieldErrors = {};
 
   File? _imagemNota;
   final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _valorController.text = _currencyFormatter.format(0);
+  }
 
   Future<void> _tirarFoto() async {
     final XFile? arquivo = await _picker.pickImage(source: ImageSource.camera);
@@ -35,6 +48,12 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
         _imagemNota = File(arquivo.path);
       });
     }
+  }
+
+  double _getValorNumerico(String valorFormatado) {
+    String cleaned = valorFormatado.replaceAll(RegExp(r'[^0-9]'), '');
+    if (cleaned.isEmpty) return 0.0;
+    return double.parse(cleaned) / 100;
   }
 
   Future<void> cadastrarManual() async {
@@ -52,8 +71,8 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
       return;
     }
 
-    final valor = double.tryParse(_valorController.text.replaceAll(',', '.'));
-    if (valor == null) {
+    final valor = _getValorNumerico(_valorController.text);
+    if (valor <= 0) {
       setState(() {
         fieldErrors['valor_total'] = 'Informe um valor válido.';
         loading = false;
@@ -131,7 +150,7 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
       filled: true,
       fillColor: Colors.grey[100],
       errorText: errorText,
-      counterText: '', // remove contador de caracteres
+      counterText: '',
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -202,9 +221,21 @@ class _ManualCadastroPageState extends State<ManualCadastroPage> {
             const SizedBox(height: 16),
             TextField(
               controller: _valorController,
-              keyboardType: const TextInputType.numberWithOptions(
-                decimal: true,
-              ),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                TextInputFormatter.withFunction((oldValue, newValue) {
+                  if (newValue.text.isEmpty) return newValue.copyWith(text: '');
+
+                  final value = double.parse(newValue.text) / 100;
+                  final newText = _currencyFormatter.format(value);
+
+                  return TextEditingValue(
+                    text: newText,
+                    selection: TextSelection.collapsed(offset: newText.length),
+                  );
+                }),
+              ],
               decoration: inputDecoration(
                 'Valor Total',
                 Icons.attach_money,
